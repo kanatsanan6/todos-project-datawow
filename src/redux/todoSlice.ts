@@ -24,7 +24,6 @@ export const todoSlice = createSlice({
     },
     // add new Todo
     addTodo: (state, action: PayloadAction<TodoState>) => {
-      console.log(current(state.items));
       state.items.push(action.payload);
     },
     // remove new Todo

@@ -56,7 +56,7 @@ function TodoItem({ todo, idx, dropDownID, setDropDownID }: Props) {
           </div>
           <h1 className={`${todo.completed && "textChecked"}`}>{todo.title}</h1>
           {/* Option */}
-          <div className="todoItem__moreOption">
+          <div className={`todoItem__moreOption ${showMoreOption && "todoItem__moreOptionExpanded"}`}>
             <img src={menu} alt="" onClick={onClickMoreOption} />
             {showMoreOption && (
               <DropMenu todo={todo} setDropDownID={setDropDownID} setClickedEdit={setClickedEdit} />

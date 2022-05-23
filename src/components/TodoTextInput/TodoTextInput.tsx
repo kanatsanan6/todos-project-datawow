@@ -7,18 +7,24 @@ import { v4 as uuidv4 } from "uuid";
 import "./TodoTextInput.css";
 import postTodo from "../../api/postTodo";
 
-function TodoTextInput() {
+type Props = {
+  setPressEnter: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+function TodoTextInput({ setPressEnter }: Props) {
   const [title, setTitle] = useState("");
 
   const dispatch = useDispatch();
 
   function handleSubmit(e: React.KeyboardEvent<HTMLDivElement>): void {
-    if (e.key === "Enter") {
+    // press Enter & input doesn't contain only spaces
+    if (e.key === "Enter" && title.replace(/\s/g, "").length) {
       const newTodo = {
         id: uuidv4(),
         title: title,
         completed: false,
       };
+      setPressEnter((prevState) => !prevState);
       postTodo(newTodo); // to db
       dispatch(addTodo(newTodo)); // local state
       setTitle(""); // reset text field
