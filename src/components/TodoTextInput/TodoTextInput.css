@@ -1,0 +1,24 @@
+.todoTextInput {
+  z-index: 1;
+  position: relative;
+}
+
+.todoTextInput > input {
+  background-color: #fff;
+  width: 478px;
+  height: 46px;
+  border: none;
+  border-radius: 9999px;
+  padding: 0 20px 0 20px;
+  /* font */
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  letter-spacing: 0.5px;
+  color: #bcbcbc;
+}
+
+.todoTextInput > input:focus {
+  color: #323232 !important;
+}

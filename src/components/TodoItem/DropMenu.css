@@ -1,0 +1,26 @@
+.dropMenu {
+  width: 67px;
+  height: 47px;
+  padding: 17px 22px 17px 22px;
+  background: #ffffff;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  z-index: 50;
+  position: relative;
+}
+
+.dropMenu > h1 {
+  cursor: pointer;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
+  text-transform: capitalize;
+}
+
+.dropMenu__edit {
+  color: #2e2e2e;
+}
+
+.dropMenu__delete {
+  color: #e07c7c;
+}

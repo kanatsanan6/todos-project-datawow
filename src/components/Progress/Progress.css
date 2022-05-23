@@ -1,0 +1,46 @@
+:root {
+  --completed: "----";
+}
+
+.progress {
+  width: 480px;
+  height: 123px;
+  background: #e07c7c;
+  border-radius: 20px;
+  padding: 0 19px 0 19px;
+  /* flex */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Header */
+.progress > h1 {
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 33px;
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+/* Progress Bar */
+.progress__bar {
+  width: 480px;
+  height: 7.34px;
+  border-radius: 999px;
+  background: #3b3b3b;
+}
+.progress__inCompletedBar {
+  width: var(--completed);
+  height: 100%;
+  background: #ffffff;
+  border-radius: 999px;
+}
+
+/* Progress Number */
+.progress > h2 {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  color: #ebb9b8;
+}
