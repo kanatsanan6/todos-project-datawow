@@ -94,10 +94,14 @@ function TodoItem({ todo, idx, dropDownID, setShowDropDownID }: Props) {
       {!isEditMode ? (
         <div className="todoItem">
           {/* Checkbox */}
-          <div className={`todoItem__checkbox ${todo.completed && "boxChecked"}`} onClick={toggleCheckBox}>
-            <img src={check} alt="" />
+          <div className="todoItem__checkboxContainer">
+            <div className={`todoItem__checkbox ${todo.completed && "boxChecked"}`} onClick={toggleCheckBox}>
+              <img src={check} alt="" />
+            </div>
           </div>
-          <h1 className={`${todo.completed && "textChecked"}`}>{todo.title}</h1>
+          <div className="todoItem__todoTitle">
+            <h1 className={`${todo.completed && "textChecked"}`}>{todo.title}</h1>
+          </div>
           {/* Option */}
           <div className={`todoItem__moreOption ${isShowMoreOption && "todoItem__moreOptionExpanded"}`}>
             <img src={menu} alt="" onClick={showMoreOption} />
