@@ -24,7 +24,7 @@ function TodoTextInput({ setPressEnter }: Props) {
         title: title,
         completed: false,
       };
-      setPressEnter((prevState) => !prevState);
+      setPressEnter((prevState) => !prevState); // trigger to scroll to bottom
       postTodo(newTodo); // to db
       dispatch(addTodo(newTodo)); // local state
       setTitle(""); // reset text field
