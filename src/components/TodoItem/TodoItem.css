@@ -28,6 +28,7 @@
   display: none;
   width: 10.21px;
   height: auto;
+  user-select: none;
 }
 /* checked */
 .boxChecked {

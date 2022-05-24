@@ -1,86 +1,84 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { RefObject, useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 
 // internal
 import "./TodoItem.css";
 import check from "../../images/check.png";
 import menu from "../../images/menu.png";
 import DropMenu from "./DropMenu";
-import { useDispatch } from "react-redux";
 import { editTitle, TodoState, toggleCompleted } from "../../redux/todoSlice";
-import patchTodo from "../../api/patchTodo";
+import updataTodo from "../../api/updateTodo";
 
 type Props = {
   todo: TodoState;
   idx: number;
   dropDownID: number | null;
-  setDropDownID: React.Dispatch<React.SetStateAction<any>>;
+  setShowDropDownID: React.Dispatch<React.SetStateAction<any>>;
 };
 
-function TodoItem({ todo, idx, dropDownID, setDropDownID }: Props) {
-  const [clickedEdit, setClickedEdit] = useState(false);
+function TodoItem({ todo, idx, dropDownID, setShowDropDownID }: Props) {
   const dispatch = useDispatch();
-  const [todoTitle, setTodoTitle] = useState(todo.title);
-  const [prevTodoTitle, setPrevTodoTitle] = useState(todoTitle);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [currentTodoTitle, setCurrentTodoTitle] = useState(todo.title);
+  const [prevTodoTitle, setPrevTodoTitle] = useState(currentTodoTitle);
 
   // toggle completed checkbox
-  function onClickCheck(): void {
+  function toggleCheckBox(): void {
     dispatch(toggleCompleted(todo));
-    patchTodo({ ...todo, completed: !todo.completed });
+    updataTodo({ ...todo, completed: !todo.completed }).catch((error) => console.error(error.message));
   }
 
-  // toggle more option (will be able to show only one Todo item at a time)
-  // which is the item where id = idx
-  const showMoreOption: boolean = dropDownID === idx;
-  function onClickMoreOption(): void {
-    setDropDownID((prevDropDownID: any) => (prevDropDownID === idx ? null : idx));
+  // toggle moreOption dropdown
+  // Dropdown will be expanded only one item at a time which is the item where id = idx
+  const isShowMoreOption: boolean = dropDownID === idx;
+  function showMoreOption(): void {
+    setShowDropDownID((prevDropDownID: any) => (prevDropDownID === idx ? null : idx));
   }
 
   // set prevTodoTitle to current TodoTitle whenever entering editmode
   // To backup in the case of invalid new Todotitle
   useEffect(() => {
-    setPrevTodoTitle(todoTitle);
-    setTodoTitle(todo.title);
-  }, [clickedEdit]);
+    setPrevTodoTitle(currentTodoTitle);
+    setCurrentTodoTitle(todo.title);
+  }, [isEditMode]);
 
   // update todos
   function updateTodo(): void {
     const newTodo = {
       id: todo.id,
-      title: todoTitle,
+      title: currentTodoTitle,
       completed: todo.completed,
     };
     // if new input is valid
-    if (todoTitle.replace(/\s/g, "").length) {
-      setClickedEdit(false);
-      patchTodo(newTodo); // update todos on db
+    if (isInputValid(currentTodoTitle)) {
+      updataTodo(newTodo); // update todos on db
       dispatch(editTitle(newTodo)); // update todos on local state
-      setTodoTitle(newTodo.title);
+      setIsEditMode(false);
+      setCurrentTodoTitle(newTodo.title);
       setPrevTodoTitle(newTodo.title);
     }
     // input is not valid
     else {
-      setTodoTitle("");
+      setCurrentTodoTitle("");
     }
   }
 
-  // save a new update by clicking
-  function onClickedSave(): void {
+  // save a new update by clicking on save button
+  function onClickSave(): void {
     updateTodo();
   }
   // save a new update by pressing Enter
   function onPressEnter(e: React.KeyboardEvent<HTMLDivElement>): void {
-    if (e.key === "Enter") {
-      updateTodo();
-    }
+    if (e.key === "Enter") updateTodo();
   }
 
-  // Disable Edit mode when clicking outside the block
+  // Disable Edit mode when clicking outside the editable block
   const divRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     function handleClickOutside(event: MouseEvent): void {
-      if (!divRef.current?.contains(event.target as Node)) {
-        setClickedEdit(false);
-        setTodoTitle(prevTodoTitle);
+      if (isClickOutSide(divRef, event)) {
+        setIsEditMode(false);
+        setCurrentTodoTitle(prevTodoTitle);
       }
     }
     // Bind the event listener
@@ -93,18 +91,18 @@ function TodoItem({ todo, idx, dropDownID, setDropDownID }: Props) {
 
   return (
     <div ref={divRef}>
-      {!clickedEdit ? (
+      {!isEditMode ? (
         <div className="todoItem">
           {/* Checkbox */}
-          <div className={`todoItem__checkbox ${todo.completed && "boxChecked"}`} onClick={onClickCheck}>
+          <div className={`todoItem__checkbox ${todo.completed && "boxChecked"}`} onClick={toggleCheckBox}>
             <img src={check} alt="" />
           </div>
           <h1 className={`${todo.completed && "textChecked"}`}>{todo.title}</h1>
           {/* Option */}
-          <div className={`todoItem__moreOption ${showMoreOption && "todoItem__moreOptionExpanded"}`}>
-            <img src={menu} alt="" onClick={onClickMoreOption} />
-            {showMoreOption && (
-              <DropMenu todo={todo} setDropDownID={setDropDownID} setClickedEdit={setClickedEdit} />
+          <div className={`todoItem__moreOption ${isShowMoreOption && "todoItem__moreOptionExpanded"}`}>
+            <img src={menu} alt="" onClick={showMoreOption} />
+            {isShowMoreOption && (
+              <DropMenu todo={todo} setShowDropDownID={setShowDropDownID} setIsEditMode={setIsEditMode} />
             )}
           </div>
         </div>
@@ -113,12 +111,12 @@ function TodoItem({ todo, idx, dropDownID, setDropDownID }: Props) {
           <input
             type="text"
             placeholder="add your todo..."
-            value={todoTitle}
+            value={currentTodoTitle}
             autoFocus
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTodoTitle(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCurrentTodoTitle(e.target.value)}
             onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => onPressEnter(e)}
           />
-          <button onClick={onClickedSave}>Save</button>
+          <button onClick={onClickSave}>Save</button>
         </div>
       )}
     </div>
@@ -126,3 +124,13 @@ function TodoItem({ todo, idx, dropDownID, setDropDownID }: Props) {
 }
 
 export default TodoItem;
+
+function isInputValid(input: string): boolean {
+  if (input.replace(/\s/g, "").length) return true;
+  return false;
+}
+
+function isClickOutSide(divRef: RefObject<HTMLDivElement>, event: MouseEvent): boolean {
+  if (!divRef.current?.contains(event.target as Node)) return true;
+  return false;
+}

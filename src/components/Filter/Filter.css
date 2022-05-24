@@ -1,6 +1,7 @@
 .filter {
   z-index: 100;
   position: relative;
+  user-select: none;
 }
 
 /* Header */

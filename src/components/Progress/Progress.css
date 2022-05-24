@@ -1,5 +1,5 @@
 :root {
-  --completed: "----";
+  --completedPercentage: "----";
 }
 
 .progress {
@@ -31,7 +31,7 @@
   background: #3b3b3b;
 }
 .progress__inCompletedBar {
-  width: var(--completed);
+  width: var(--completedPercentage);
   height: 100%;
   background: #ffffff;
   border-radius: 999px;

@@ -8,26 +8,26 @@ import "./TodoTextInput.css";
 import postTodo from "../../api/postTodo";
 
 type Props = {
-  setPressEnter: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsInputSuccess: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-function TodoTextInput({ setPressEnter }: Props) {
-  const [title, setTitle] = useState("");
-
+function TodoTextInput({ setIsInputSuccess }: Props) {
+  const [todoInput, setTodoInput] = useState("");
   const dispatch = useDispatch();
 
-  function handleSubmit(e: React.KeyboardEvent<HTMLDivElement>): void {
+  // handle new Todo from input field
+  function handleNewTodoInput(e: React.KeyboardEvent<HTMLDivElement>): void {
     // press Enter & input doesn't contain only spaces
-    if (e.key === "Enter" && title.replace(/\s/g, "").length) {
+    if (e.key === "Enter" && isInputValid(todoInput)) {
       const newTodo = {
         id: uuidv4(),
-        title: title,
+        title: todoInput,
         completed: false,
       };
-      setPressEnter((prevState) => !prevState); // trigger to scroll to bottom
-      postTodo(newTodo); // to db
-      dispatch(addTodo(newTodo)); // local state
-      setTitle(""); // reset text field
+      postTodo(newTodo); // add new todo to db
+      dispatch(addTodo(newTodo)); // add new todo to local state
+      setTodoInput(""); // reset text field
+      setIsInputSuccess((prevState) => !prevState); // trigger success input state
     }
   }
 
@@ -36,14 +36,19 @@ function TodoTextInput({ setPressEnter }: Props) {
       <input
         type="text"
         placeholder="add your todo..."
-        value={title}
+        value={todoInput}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          setTitle(e.target.value);
+          setTodoInput(e.target.value);
         }}
-        onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => handleSubmit(e)}
+        onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => handleNewTodoInput(e)}
       />
     </div>
   );
 }
 
 export default TodoTextInput;
+
+function isInputValid(input: string): boolean {
+  if (input.replace(/\s/g, "").length) return true;
+  return false;
+}

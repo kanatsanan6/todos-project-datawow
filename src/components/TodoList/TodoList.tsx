@@ -1,58 +1,51 @@
 import { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 
 // internal
+import "./TodoList.css";
 import TodoItem from "../TodoItem/TodoItem";
 import Filter from "../Filter/Filter";
-import "./TodoList.css";
-import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { TodoState } from "../../redux/todoSlice";
 
+type DropDownSelection = "All" | "Done" | "Undone";
 type Props = {
-  pressEnter: boolean;
+  isInputSuccess: boolean;
 };
 
-function TodoList({ pressEnter }: Props) {
-  const [dropDownID, setDropDownID] = useState<number | null>(null);
-  const [currentDropDown, setCurrentDropDown] = useState<"All" | "Done" | "Undone">("All");
-  let todoItems = useSelector((state: RootState) => state.todo.items);
+function TodoList({ isInputSuccess }: Props) {
+  let allTodos = useSelector((state: RootState) => state.todo.items);
+  const [showDropDownID, setShowDropDownID] = useState<number | null>(null);
+  const [currentSelectedDropDown, setCurrentSelectedDropDown] = useState<DropDownSelection>("All");
 
-  // scroll to bottom when there are a new todos added.
-  const todoListRef = useRef<HTMLDivElement | null>(null);
-  function scrollToBottom(): void {
-    const objDiv: any = document.getElementById("scrollToBottom");
-    objDiv.scrollTop = objDiv.scrollHeight;
-  }
+  // scroll to bottom when there is a new todos added.
   useEffect(() => {
-    scrollToBottom();
-  }, [pressEnter]);
-
-  // return boolean as a result of filter selection
-  function filterCondition(todo: TodoState, selection: "All" | "Done" | "Undone"): boolean {
-    if (selection === "All") {
-      return true;
-    } else if (selection === "Done" && todo.completed) {
-      return true;
-    } else if (selection === "Undone" && !todo.completed) {
-      return true;
-    }
-    return false;
-  }
+    const todoContainerDiv: HTMLElement | null = document.getElementById("todoContainerDiv");
+    scrollToBottom(todoContainerDiv);
+  }, [isInputSuccess]);
 
   return (
     <div className="todoList">
       {/* Header */}
       <div className="todoList__header">
         <h1>Tasks</h1>
-        <Filter currentDropDown={currentDropDown} setCurrentDropDown={setCurrentDropDown} />
+        <Filter
+          currentSelectedDropDown={currentSelectedDropDown}
+          setCurrentSelectedDropDown={setCurrentSelectedDropDown}
+        />
       </div>
-      <div className="todoList__container" id="scrollToBottom" ref={todoListRef}>
+      <div className="todoList__container" id="todoContainerDiv">
         {/* Item */}
-        {todoItems.map((todo, idx) => {
+        {allTodos.map((todo, idx) => {
           return (
             <div key={idx}>
-              {filterCondition(todo, currentDropDown) && (
-                <TodoItem todo={todo} idx={idx} dropDownID={dropDownID} setDropDownID={setDropDownID} />
+              {isMatchWithFilter(todo, currentSelectedDropDown) && (
+                <TodoItem
+                  todo={todo}
+                  idx={idx}
+                  dropDownID={showDropDownID}
+                  setShowDropDownID={setShowDropDownID}
+                />
               )}
             </div>
           );
@@ -63,3 +56,15 @@ function TodoList({ pressEnter }: Props) {
 }
 
 export default TodoList;
+
+function scrollToBottom(element: HTMLElement | null): void {
+  element!.scrollTop = element!.scrollHeight;
+}
+
+// return boolean as a result of filter selection
+function isMatchWithFilter(todo: TodoState, selection: DropDownSelection): boolean {
+  if (selection === "All") return true;
+  else if (selection === "Done" && todo.completed) return true;
+  else if (selection === "Undone" && !todo.completed) return true;
+  return false;
+}

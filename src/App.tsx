@@ -1,8 +1,8 @@
-// internal
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import getTodo from "./api/getTodo";
+// internal
 import "./App.css";
+import getTodo from "./api/getTodo";
 import Progress from "./components/Progress/Progress";
 import TodoList from "./components/TodoList/TodoList";
 import TodoTextInput from "./components/TodoTextInput/TodoTextInput";
@@ -12,24 +12,25 @@ function App() {
   const dispatch = useDispatch();
 
   // use to transfer Enter pressing detection among the component
-  const [pressEnter, setPressEnter] = useState(false);
+  const [isInputSuccess, setIsInputSuccess] = useState(false);
 
   // get Todos from server
   useEffect(() => {
     getTodo()
       .then((resp) => {
-        dispatch(fetchTodo(resp));
+        dispatch(fetchTodo(resp)); // save Todos in local state
       })
       .catch((error) => {
         console.error(error.message);
       });
   }, []);
+
   return (
     <div className="app">
       <div className="app__container">
         <Progress />
-        <TodoList pressEnter={pressEnter} />
-        <TodoTextInput setPressEnter={setPressEnter} />
+        <TodoList isInputSuccess={isInputSuccess} />
+        <TodoTextInput setIsInputSuccess={setIsInputSuccess} />
       </div>
     </div>
   );

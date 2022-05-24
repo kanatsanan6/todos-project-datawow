@@ -3,39 +3,40 @@ import { useState } from "react";
 import "./Filter.css";
 import arrowDown from "../../images/arrow-down.png";
 
+type DropDownSelection = "All" | "Done" | "Undone";
 type Props = {
-  currentDropDown: "All" | "Done" | "Undone";
-  setCurrentDropDown: React.Dispatch<React.SetStateAction<"All" | "Done" | "Undone">>;
+  currentSelectedDropDown: DropDownSelection;
+  setCurrentSelectedDropDown: React.Dispatch<React.SetStateAction<DropDownSelection>>;
 };
 
-function Filter({ currentDropDown, setCurrentDropDown }: Props) {
+function Filter({ currentSelectedDropDown, setCurrentSelectedDropDown }: Props) {
   const [showDropDown, setShowDropDown] = useState(false);
 
   // toggle dropdown
-  function onClickedShowDropDown(): void {
+  function toggleDropDown(): void {
     setShowDropDown((prevShowDropDown) => !prevShowDropDown);
   }
   // hide dropdown when mouse left
   function onMouseLeaveDropDown(): void {
     setShowDropDown(false);
   }
-  // set current dropdown selection
-  function onClickedCurrentDropDown(filterOption: "All" | "Done" | "Undone"): void {
-    setCurrentDropDown(filterOption);
+  // handle dropdown selection
+  function selectDropDown(filterOption: DropDownSelection): void {
+    setCurrentSelectedDropDown(filterOption);
     setShowDropDown(false); // Hide dropdown
   }
 
   return (
     <div className="filter" onMouseLeave={onMouseLeaveDropDown}>
-      <div className="filter__header" onClick={onClickedShowDropDown}>
-        <h1>{currentDropDown}</h1>
+      <div className="filter__header" onClick={toggleDropDown}>
+        <h1>{currentSelectedDropDown}</h1>
         <img src={arrowDown} alt="" />
       </div>
       {showDropDown && (
         <div className="filter__dropDown">
-          <h1 onClick={() => onClickedCurrentDropDown("All")}>All</h1>
-          <h1 onClick={() => onClickedCurrentDropDown("Done")}>Done</h1>
-          <h1 onClick={() => onClickedCurrentDropDown("Undone")}>Undone</h1>
+          <h1 onClick={() => selectDropDown("All")}>All</h1>
+          <h1 onClick={() => selectDropDown("Done")}>Done</h1>
+          <h1 onClick={() => selectDropDown("Undone")}>Undone</h1>
         </div>
       )}
     </div>
