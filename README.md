@@ -5,6 +5,11 @@
 ## About
 TODOS LIST is a Web-Application built to track of tasks that need to be done. Users can be able to add new tasks and once the tasks are done, they can be marked and filtered out to see what else are still pending!
 
+### Credits (Data Wow Co., Ltd.)
+** UI design is provided by https://www.figma.com/file/3CJh1KDBSXHzUqqN3THmcD/Todos?node-id=0%3A1
+
+** Backend json server is provided by https://github.com/datawowio/todos-json-server
+
 ## Build with
 ### Front-End
 - React
