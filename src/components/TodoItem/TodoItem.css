@@ -89,10 +89,10 @@
   height: auto;
   max-height: 119px;
   width: fit-content;
+  margin-left: 8px;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  margin-top: 0px;
   user-select: none;
 }
 
