@@ -1,11 +1,16 @@
 .todoTextInput {
   z-index: 1;
   position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 .todoTextInput > input {
   background-color: #fff;
-  width: 478px;
+  max-width: 478px;
+  min-width: 340px;
+  width: 100%;
   height: 46px;
   border: none;
   border-radius: 9999px;
@@ -22,3 +27,17 @@
 .todoTextInput > input:focus {
   color: #323232 !important;
 }
+
+/* @media (max-width: 768px) {
+  .todoTextInput {
+    max-width: 478px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  .todoTextInput > input {
+    max-width: 478px;
+    min-width: 340px;
+    width: 100%;
+  }
+} */

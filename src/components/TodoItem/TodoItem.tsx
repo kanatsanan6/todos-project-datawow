@@ -3,17 +3,17 @@ import { useDispatch } from "react-redux";
 
 // internal
 import "./TodoItem.css";
-import check from "../../images/check.png";
-import menu from "../../images/menu.png";
 import DropMenu from "./DropMenu";
 import { editTitle, TodoState, toggleCompleted } from "../../redux/todoSlice";
-import updataTodo from "../../api/updateTodo";
+import check from "../../images/check.png";
+import menu from "../../images/menu.png";
+import updateTodo from "../../api/updateTodo";
 
 type Props = {
   todo: TodoState;
   idx: number;
   dropDownID: number | null;
-  setShowDropDownID: React.Dispatch<React.SetStateAction<any>>;
+  setShowDropDownID: React.Dispatch<React.SetStateAction<number | null>>;
 };
 
 function TodoItem({ todo, idx, dropDownID, setShowDropDownID }: Props) {
@@ -25,14 +25,14 @@ function TodoItem({ todo, idx, dropDownID, setShowDropDownID }: Props) {
   // toggle completed checkbox
   function toggleCheckBox(): void {
     dispatch(toggleCompleted(todo));
-    updataTodo({ ...todo, completed: !todo.completed }).catch((error) => console.error(error.message));
+    updateTodo({ ...todo, completed: !todo.completed }).catch((error) => console.error(error.message));
   }
 
   // toggle moreOption dropdown
   // Dropdown will be expanded only one item at a time which is the item where id = idx
   const isShowMoreOption: boolean = dropDownID === idx;
   function showMoreOption(): void {
-    setShowDropDownID((prevDropDownID: any) => (prevDropDownID === idx ? null : idx));
+    setShowDropDownID((prevDropDownID: number | null) => (prevDropDownID === idx ? null : idx));
   }
 
   // set prevTodoTitle to current TodoTitle whenever entering editmode
@@ -43,33 +43,30 @@ function TodoItem({ todo, idx, dropDownID, setShowDropDownID }: Props) {
   }, [isEditMode]);
 
   // update todos
-  function updateTodo(): void {
+  function handleTodoUpdate(): void {
     const newTodo = {
       id: todo.id,
       title: currentTodoTitle,
       completed: todo.completed,
     };
-    // if new input is valid
     if (isInputValid(currentTodoTitle)) {
-      updataTodo(newTodo); // update todos on db
+      updateTodo(newTodo); // update todos on db
       dispatch(editTitle(newTodo)); // update todos on local state
       setIsEditMode(false);
       setCurrentTodoTitle(newTodo.title);
       setPrevTodoTitle(newTodo.title);
-    }
-    // input is not valid
-    else {
+    } else {
       setCurrentTodoTitle("");
     }
   }
 
   // save a new update by clicking on save button
   function onClickSave(): void {
-    updateTodo();
+    handleTodoUpdate();
   }
   // save a new update by pressing Enter
   function onPressEnter(e: React.KeyboardEvent<HTMLDivElement>): void {
-    if (e.key === "Enter") updateTodo();
+    if (e.key === "Enter") handleTodoUpdate();
   }
 
   // Disable Edit mode when clicking outside the editable block
@@ -90,7 +87,7 @@ function TodoItem({ todo, idx, dropDownID, setShowDropDownID }: Props) {
   }, [divRef]);
 
   return (
-    <div ref={divRef}>
+    <div ref={divRef} className="todoItem__container">
       {!isEditMode ? (
         <div className="todoItem">
           {/* Checkbox */}

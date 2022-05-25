@@ -1,5 +1,7 @@
 .todoList {
-  width: 518px;
+  max-width: 518px;
+  min-width: 380px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -26,6 +28,8 @@
 /* Container */
 .todoList__container {
   height: 248px;
+  min-width: 345px;
+  width: 100%;
   overflow: scroll;
   scrollbar-width: none;
 }

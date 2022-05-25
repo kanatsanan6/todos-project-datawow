@@ -18,7 +18,7 @@ function TodoList({ isInputSuccess }: Props) {
   const [showDropDownID, setShowDropDownID] = useState<number | null>(null);
   const [currentSelectedDropDown, setCurrentSelectedDropDown] = useState<DropDownSelection>("All");
 
-  // scroll to bottom when there is a new todos added.
+  // scroll to bottom when there is a new todo added.
   useEffect(() => {
     const todoContainerDiv: HTMLElement | null = document.getElementById("todoContainerDiv");
     scrollToBottom(todoContainerDiv);
@@ -38,7 +38,7 @@ function TodoList({ isInputSuccess }: Props) {
         {/* Item */}
         {allTodos.map((todo, idx) => {
           return (
-            <div key={idx}>
+            <div key={idx} className="todoList__subContainer">
               {isMatchWithFilter(todo, currentSelectedDropDown) && (
                 <TodoItem
                   todo={todo}
