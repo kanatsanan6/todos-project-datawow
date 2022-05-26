@@ -2,6 +2,12 @@
 
 ![Preview](https://github.com/kanatsanan6/todos-project-datawow/blob/main/public/preview.jpg?raw=true)
 
+## Live DEMO -> [Live Demo](https://todos-project-datawow.netlify.app/)
+
+Click here to check the live demo: [Live Demo](https://todos-project-datawow.netlify.app/)
+
+** The site will take roughly 5 seconds to get the data from Heroku server.
+
 ## About
 TODOS LIST is a Web-Application built to track of tasks that need to be done. Users can be able to add new tasks and once the tasks are done, they can be marked and filtered out to see what else are still pending!
 
